@@ -527,4 +527,5 @@ lint/tmp/
 # lint/reports/
 
 # Android Profiling
-
+apps/nx-affected/nx-affected-e2e/artifacts
+apps/nx-reaffected/nx-reaffected-e2e/artifacts
