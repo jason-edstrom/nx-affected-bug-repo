@@ -1,9 +1,13 @@
 name: NX Affected Build
 
 
-on: push
-
-
+on: 
+  push:
+    branches:
+      - main
+  pull_request: 
+    branches:
+      - main
 
 jobs:
   setup:
