@@ -37,7 +37,8 @@ jobs:
             const execSync = require('child_process').execSync;
             let json = JSON.parse(execSync(`npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android`).toString().trim())
             core.setOutput('affectedJSON', json);
-
+      - name: Print json
+        run: echo "${{ steps.scripting.outputs.affectedJSON }}"
 #      - name: Generate affected matrix
 #        uses: mathiasvr/command-output@v1
 #        continue-on-error: true
