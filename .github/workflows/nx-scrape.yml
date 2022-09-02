@@ -23,6 +23,8 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: yarn install
+
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v2
         id: setSHAs
