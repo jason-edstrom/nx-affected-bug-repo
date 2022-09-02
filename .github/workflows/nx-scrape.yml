@@ -1,0 +1,38 @@
+name: NX Scrape Matrix
+
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    name: Scrape NX for projects
+    outputs:
+      hasChanges: ${{ steps.affected.outputs.hasChanges }}
+      matrix: ${{ steps.affected.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v2
+        id: setSHAs
+
+      - name: Generate affected matrix
+        uses: mathiasvr/command-output@v1
+        continue-on-error: true
+        id: cmd
+        with: npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android
+
+      - name: Print matrix
+        run: echo "${{ fromJSON(steps.cmd.outputs.stdout) }}"
+
