@@ -54,4 +54,4 @@ jobs:
           node-version: 16
           cache: 'yarn'
       - run: yarn install
-      - run: nx run ${{ matrix.tasks.target.project }}:${{ matrix.tasks.target.target}}
+      - run: nx run ${{ matrix.tasks.*.project }}:${{ matrix.tasks.*.target}}
