@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Scrape NX for projects
     outputs:
-      affected: ${{ steps.cmd.outputs.stdout }}
+      affected: ${{ toJSON(fromJSON(steps.cmd.outputs.stdout)) }}
     steps:
       - uses: actions/checkout@v3
         with:
