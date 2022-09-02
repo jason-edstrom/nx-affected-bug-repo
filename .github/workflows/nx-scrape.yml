@@ -34,7 +34,6 @@ jobs:
         id: scripting
         with:
           script: |
-            const core = require('@actions/core');
             const execSync = require('child_process').execSync;
             let json = JSON.parse(execSync(`npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android`).toString().trim())
             core.setOutput('affectedJSON', json);
