@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Scrape NX for projects
     outputs:
-      affected: ${{ toJSON(fromJSON(steps.cmd.outputs.stdout)) }}
+      affected: ${{ steps.scripting.outputs.affectedJSON }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -30,13 +30,21 @@ jobs:
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v2
         id: setSHAs
-
-      - name: Generate affected matrix
-        uses: mathiasvr/command-output@v1
-        continue-on-error: true
-        id: cmd
+      - uses: actions/github-script@v6
+        id: scripting
         with:
-          run: npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android
+          script: |
+            const core = require('@actions/core');
+            const execSync = require('child_process').execSync;
+            let json = JSON.parse(execSync(`npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android`).toString().trim())
+            core.setOutput('affectedJSON', json);
+
+#      - name: Generate affected matrix
+#        uses: mathiasvr/command-output@v1
+#        continue-on-error: true
+#        id: cmd
+#        with:
+#          run: npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android
 
   execute:
     name: BUILD the things
