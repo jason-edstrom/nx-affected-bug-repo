@@ -16,8 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Scrape NX for projects
     outputs:
-      hasChanges: ${{ steps.affected.outputs.hasChanges }}
-      matrix: ${{ steps.affected.outputs.matrix }}
+      affected: ${{ steps.cmd.outputs.stdout }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -39,6 +38,20 @@ jobs:
         with:
           run: npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android
 
-      - name: Print matrix
-        run: echo ${{ trim(toJSON(steps.cmd.outputs.stdout)) }}
-
+  execute:
+    name: ${{ matrix.target }}
+    needs: [setup]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.setup.outputs.affected) }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn install
+      - run: nx run ${{ tasks.target.project }}:${{ tasks.target.target}}
