@@ -39,7 +39,7 @@ jobs:
           run: npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android
 
   execute:
-    name: ${{ matrix.target }}
+    name: ${{ matrix.tasks.target.target }}
     needs: [setup]
     runs-on: ubuntu-latest
     strategy:
