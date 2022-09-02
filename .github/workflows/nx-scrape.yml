@@ -40,5 +40,5 @@ jobs:
           run: npx nx print-affected --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --target=build-android
 
       - name: Print matrix
-        run: echo ${{ fromJSON(steps.cmd.outputs.stdout) }}
+        run: echo ${{ toJSON(steps.cmd.outputs.stdout) }}
 
